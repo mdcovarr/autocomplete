@@ -82,5 +82,8 @@ def main():
     print(st[0])
 
 
+    t.print_suggestions("michae")
+
+
 if __name__ == "__main__":
     main()

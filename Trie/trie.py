@@ -18,6 +18,7 @@ class Trie:
             Default Constructor
         """
         self.root = self.get_node()
+        self.word_list = []
 
 
     def get_node(self):
@@ -101,3 +102,50 @@ class Trie:
 
         # Returns true of key exists and is an end of a word
         return (trie_crawl != None) and (trie_crawl.is_end_of_word)
+
+
+    def suggestions_record(self, node, word):
+        """
+            Method to recursively traverse trie
+            and return a whole words
+        """
+        if node.is_end_of_word:
+            self.word_list.append(word)
+
+        for i in range(len(node.children)):
+            if node.children[i]:
+                self.suggestions_record(node.children[i], word + node.children[i].val)
+
+
+
+    def print_suggestions(self, key):
+        """
+            Method used to return all the words in the trie
+            whose common prefix is the given key thus listing
+            all suggestions for autocomplete
+        """
+        node = self.root
+        length = len(key)
+        not_found = False
+        temp_word = ""
+
+        for level in range(length):
+            index = self.char_to_index(key[level])
+
+            if not node.children[index]:
+                not_found = True
+                break
+
+            temp_word += key[level]
+            node = node.children[index]
+
+        if not_found:
+            return 0
+        elif node.is_end_of_word:
+            return -1
+
+        self.suggestions_record(node, temp_word)
+
+        for s in self.word_list:
+            print(s)
+        return 1

@@ -1,27 +1,39 @@
 """
     Main Script to test Trie implementation
 """
+import os
 from Trie.trie import Trie
+
+CWD = os.path.dirname(os.path.realpath(__file__))
+INPUT_FILE = "baby-names.txt"
+
 
 
 def main():
-    keys = [
-        "the",
-        "a",
-        "there",
-        "answer",
-        "any",
-        "by",
-        "their",
-    ]
-
+    """
+     1. Get input data
+    """
     t = Trie()
+    array = []
 
-    for key in keys:
-        t.insert(key)
+    filename = os.path.join(CWD, "data", INPUT_FILE)
 
-    print("Key {} in Trie? {}".format("the", t.search("the")))
-    print("Key {} in Trie? {}".format("thy", t.search("thy")))
+    with open(filename, "r") as f:
+        first = True
+        for line in f.readlines():
+            if first:
+                first = False
+                continue
+
+            line = line.lstrip().rstrip()
+            weight, key = line.split("\t")
+            t.insert(key.lower(), int(weight))
+            array.append([key.lower(), weight])
+
+    """
+        Sort the array alphabetically
+    """
+    array = sorted(array, key = lambda x:x[0])
 
 
 if __name__ == "__main__":

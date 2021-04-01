@@ -8,6 +8,7 @@ class TrieNode:
     def __init__(self, val=None):
         self.val = val
         self.children = [None for _ in range(len(string.ascii_lowercase))]
+        self.weight = -1
         self.is_end_of_word = False
 
 
@@ -34,7 +35,7 @@ class Trie:
         return ord(ch) - ord('a')
 
 
-    def insert(self, key):
+    def insert(self, key, weight):
         """
             Method used to insert a new key to an existing trie
 
@@ -53,9 +54,18 @@ class Trie:
         for level in range(length):
             index = self.char_to_index(key[level])
 
-            if not trie_crawl.children[index]:
-                trie_crawl.children[index] = self.get_node()
-                trie_crawl.children[index].val = key[level]
+            if level == length - 1:
+                # make sure to add the weight of the word
+                if not trie_crawl.children[index]:
+                    trie_crawl.children[index] = self.get_node()
+                    trie_crawl.children[index].val = key[level]
+                    trie_crawl.children[index].weight = weight
+
+            else:
+                # we are still iterating through the word
+                if not trie_crawl.children[index]:
+                    trie_crawl.children[index] = self.get_node()
+                    trie_crawl.children[index].val = key[level]
 
             trie_crawl = trie_crawl.children[index]
 
